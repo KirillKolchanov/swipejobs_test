@@ -1,7 +1,7 @@
+import { Profile } from "@/src/components/Profile";
 import { View, StyleSheet } from "react-native";
-import { Profile } from "../../components/Profile";
 
-export default function UserModal() {
+export default function User() {
   return (
     <View style={styles.container}>
       <Profile />
