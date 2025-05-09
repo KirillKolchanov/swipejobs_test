@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import { useState } from "react";
 import { API_BASE_URL, USER_ID } from "../constants";
 import { useJobsMatches } from "../hooks/useJobsMatches";
@@ -33,7 +33,13 @@ const Jobs = () => {
         Alert.alert("Rejected!");
         setCurrentIndex((prev) => prev + 1);
       } else if (res && res.success === false) {
-        Alert.alert(res.message || "Error. Something went wrong, Try again.");
+        if (Platform.OS === "web") {
+          window.alert(
+            res.message || "Error. Something went wrong, Try again."
+          );
+        } else {
+          Alert.alert(res.message || "Error. Something went wrong, Try again.");
+        }
       } else {
         Alert.alert("Error. Something went wrong, Try again.");
       }
@@ -42,7 +48,11 @@ const Jobs = () => {
         e instanceof Error
           ? e.message
           : "Error. Something went wrong, Try again.";
-      Alert.alert(message);
+      if (Platform.OS === "web") {
+        window.alert(message);
+      } else {
+        Alert.alert(message);
+      }
     } finally {
       setIsRejecting(false);
     }
