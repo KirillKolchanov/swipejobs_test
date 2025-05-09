@@ -12,3 +12,30 @@ export interface User {
   phoneNumber: string;
   workerId: string;
 }
+
+export interface Job {
+  jobId: string;
+  jobTitle: {
+    name: string;
+    imageUrl: string;
+  };
+  company: {
+    name: string;
+    address: {
+      formattedAddress: string;
+      zoneId: string;
+    };
+    reportTo: {
+      name: string;
+    };
+  };
+  wagePerHourInCents: number;
+  milesToTravel: number;
+  shifts: {
+    startDate: string;
+    endDate: string;
+  }[];
+  branch: string;
+  branchPhoneNumber: string;
+  requirements: string[];
+}

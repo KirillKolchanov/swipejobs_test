@@ -55,8 +55,9 @@ export function Profile() {
 
 const styles = StyleSheet.create({
   container: {
+    width: 400,
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    margin: "auto",
   },
   content: {
     flex: 1,

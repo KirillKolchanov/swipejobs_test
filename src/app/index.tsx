@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import Jobs from "../components/Jobs";
 
 export default function Home() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Hello world!</Text>
+    <View style={{ flex: 1, marginTop: 10, alignItems: "center" }}>
+      <Jobs />
     </View>
   );
 }

@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  useWindowDimensions,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter, usePathname, Link } from "expo-router";
 import { API_BASE_URL, USER_ID } from "@/src/constants";
@@ -9,6 +15,16 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, loading, error } = useUser(API_BASE_URL, USER_ID);
+  const { width: screenWidth } = useWindowDimensions();
+
+  let contentWidth;
+  if (screenWidth <= 420) {
+    contentWidth = screenWidth * 0.98;
+  } else if (screenWidth <= 700) {
+    contentWidth = 440;
+  } else {
+    contentWidth = 600;
+  }
 
   const handleLogoPress = () => {
     if (pathname === "/") {
@@ -25,35 +41,45 @@ export function Header() {
         { paddingTop: insets.top, height: 60 + insets.top },
       ]}
     >
-      <Pressable onPress={handleLogoPress}>
-        <Text>
-          <Text style={styles.logoSwipe}>swipe</Text>
-          <Text style={styles.logoJobs}>jobs</Text>
-        </Text>
-      </Pressable>
-
-      {loading ? (
-        <Text style={styles.userName}>Loading...</Text>
-      ) : error ? (
-        <Text style={styles.errorText}>User not found</Text>
-      ) : (
-        <Link href={"/user"}>
-          <Text style={styles.userName}>
-            {user?.firstName} {user?.lastName}
+      <View
+        style={[styles.content, { width: contentWidth, alignSelf: "center" }]}
+      >
+        <Pressable onPress={handleLogoPress}>
+          <Text>
+            <Text style={styles.logoSwipe}>swipe</Text>
+            <Text style={styles.logoJobs}>jobs</Text>
           </Text>
-        </Link>
-      )}
+        </Pressable>
+
+        {loading ? (
+          <Text style={styles.userName}>Loading...</Text>
+        ) : error ? (
+          <Text style={styles.errorText}>User not found</Text>
+        ) : (
+          <Link href={"/user"}>
+            <Text style={styles.userName}>
+              {user?.firstName} {user?.lastName}
+            </Text>
+          </Link>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
+    backgroundColor: "#000",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  content: {
     paddingHorizontal: 24,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#000",
   },
   logoSwipe: {
     color: "#d1d5db",
