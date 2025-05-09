@@ -1,26 +1,26 @@
 import axios from "axios";
 import { useState } from "react";
 
-export const useRejectJob = () => {
-  const [isRejectLoading, setIsRejectLoading] = useState(false);
+export const useAcceptJob = () => {
+  const [isAcceptLoading, setIsAcceptLoading] = useState(false);
 
-  const rejectJob = async (
+  const acceptJob = async (
     baseUrl: string,
     workerId: string,
     jobId: string
   ) => {
     try {
-      setIsRejectLoading(true);
+      setIsAcceptLoading(true);
       const response = await axios.get(
-        `${baseUrl}/${workerId}/job/${jobId}/reject`
+        `${baseUrl}/${workerId}/job/${jobId}/accept`
       );
       return response.data;
     } catch (error) {
       throw error;
     } finally {
-      setIsRejectLoading(false);
+      setIsAcceptLoading(false);
     }
   };
 
-  return { rejectJob, isRejectLoading };
+  return { acceptJob, isAcceptLoading };
 };

@@ -4,12 +4,21 @@ import { API_BASE_URL, USER_ID } from "../constants";
 import { useJobsMatches } from "../hooks/useJobsMatches";
 import { useRejectJob } from "../hooks/useRejectJob";
 import JobCard from "./JobCard";
+import { useAcceptJob } from "../hooks/useAcceptJob";
+
+type JobActionResult = { success: boolean; message?: string };
+type JobAction = (
+  baseUrl: string,
+  userId: string,
+  jobId: string
+) => Promise<JobActionResult>;
 
 const Jobs = () => {
   const { jobs, error, loading } = useJobsMatches(API_BASE_URL, USER_ID);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isJobAccepted, setIsJobAccepted] = useState(false);
   const { rejectJob } = useRejectJob();
-  const [isRejecting, setIsRejecting] = useState(false);
+  const { acceptJob } = useAcceptJob();
 
   if (loading) {
     return <Text style={styles.text}>Loading...</Text>;
@@ -23,22 +32,20 @@ const Jobs = () => {
     return <Text style={styles.text}>No jobs found</Text>;
   }
 
-  const handleNoThanks = async () => {
-    if (isRejecting) return;
-    setIsRejecting(true);
+  const handleJobAction = async (action: JobAction, onSuccess: () => void) => {
     try {
       const job = jobs[currentIndex];
-      const res = await rejectJob(API_BASE_URL, USER_ID, job.jobId);
+      const res = await action(API_BASE_URL, USER_ID, job.jobId);
       if (res && res.success) {
-        Alert.alert("Rejected!");
-        setCurrentIndex((prev) => prev + 1);
+        onSuccess();
       } else if (res && res.success === false) {
+        setCurrentIndex((prev) => prev + 1);
+        const message =
+          res.message || "Error. Something went wrong, Try again.";
         if (Platform.OS === "web") {
-          window.alert(
-            res.message || "Error. Something went wrong, Try again."
-          );
+          window.alert(message);
         } else {
-          Alert.alert(res.message || "Error. Something went wrong, Try again.");
+          Alert.alert(message);
         }
       } else {
         Alert.alert("Error. Something went wrong, Try again.");
@@ -53,10 +60,20 @@ const Jobs = () => {
       } else {
         Alert.alert(message);
       }
-    } finally {
-      setIsRejecting(false);
     }
   };
+
+  const handleRejectJob = () =>
+    handleJobAction(rejectJob, () => {
+      Alert.alert("Rejected!");
+      setCurrentIndex((prev) => prev + 1);
+    });
+
+  const handleAcceptJob = () =>
+    handleJobAction(acceptJob, () => {
+      setIsJobAccepted(true);
+      Alert.alert("Accepted!");
+    });
 
   if (currentIndex >= jobs.length) {
     return (
@@ -68,7 +85,12 @@ const Jobs = () => {
 
   return (
     <View>
-      <JobCard job={jobs[currentIndex]} onNoThanks={handleNoThanks} />
+      <JobCard
+        job={jobs[currentIndex]}
+        isJobAccepted={isJobAccepted}
+        onAcceptJob={handleAcceptJob}
+        onRejectJob={handleRejectJob}
+      />
     </View>
   );
 };

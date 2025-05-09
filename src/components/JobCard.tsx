@@ -13,10 +13,17 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface JobCardProps {
   job: Job;
-  onNoThanks: () => void;
+  isJobAccepted: boolean;
+  onAcceptJob: () => void;
+  onRejectJob: () => void;
 }
 
-const JobCard = ({ job, onNoThanks }: JobCardProps) => {
+const JobCard = ({
+  job,
+  isJobAccepted,
+  onAcceptJob,
+  onRejectJob,
+}: JobCardProps) => {
   const [showAllShifts, setShowAllShifts] = useState(false);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -35,14 +42,12 @@ const JobCard = ({ job, onNoThanks }: JobCardProps) => {
 
   const CONTENT_MAX_HEIGHT = screenHeight * 0.9 - IMAGE_HEIGHT - BUTTONS_HEIGHT;
 
-  // Форматирование дат смен
   const formatShift = (shift: { startDate: string; endDate: string }) => {
     const start = new Date(shift.startDate);
     const end = new Date(shift.endDate);
     return `${start.toLocaleString("en-US", { month: "short", day: "numeric", weekday: "short" })} ${start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} PDT`;
   };
 
-  // Для секции Shift Dates
   const shiftsToShow = showAllShifts ? job.shifts : job.shifts.slice(0, 2);
   const hasMoreShifts = Array.isArray(job.shifts) && job.shifts.length > 2;
 
@@ -159,23 +164,29 @@ const JobCard = ({ job, onNoThanks }: JobCardProps) => {
         </View>
       </ScrollView>
 
-      <View
-        style={[
-          styles.buttonRow,
-          {
-            borderBottomLeftRadius: 12,
-            borderBottomRightRadius: 12,
-            paddingBottom: Math.max(insets.bottom, 16),
-          },
-        ]}
-      >
-        <TouchableOpacity style={styles.noBtn} onPress={onNoThanks}>
-          <Text style={styles.noBtnText}>No Thanks</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.yesBtn}>
-          <Text style={styles.yesBtnText}>I will Take it</Text>
-        </TouchableOpacity>
-      </View>
+      {isJobAccepted ? (
+        <View style={[styles.buttonRow, styles.currentJobContainer]}>
+          <Text style={styles.currentJobText}>It is your current Job</Text>
+        </View>
+      ) : (
+        <View
+          style={[
+            styles.buttonRow,
+            {
+              borderBottomLeftRadius: 12,
+              borderBottomRightRadius: 12,
+              paddingBottom: Math.max(insets.bottom, 16),
+            },
+          ]}
+        >
+          <TouchableOpacity style={styles.noBtn} onPress={onRejectJob}>
+            <Text style={styles.noBtnText}>No Thanks</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.yesBtn} onPress={onAcceptJob}>
+            <Text style={styles.yesBtnText}>I will Take it</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -288,5 +299,18 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  currentJobContainer: {
+    backgroundColor: "#4CAF50",
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    paddingVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  currentJobText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
