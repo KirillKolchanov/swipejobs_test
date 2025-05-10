@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
-import { useState } from "react";
 import { API_BASE_URL, USER_ID } from "../constants";
 import { useJobsMatches } from "../hooks/useJobsMatches";
 import { useRejectJob } from "../hooks/useRejectJob";
 import JobCard from "./JobCard";
 import { useAcceptJob } from "../hooks/useAcceptJob";
+import { useJobs } from "../context/JobsContext";
 
 type JobActionResult = { success: boolean; message?: string };
 type JobAction = (
@@ -15,8 +15,8 @@ type JobAction = (
 
 const Jobs = () => {
   const { jobs, error, loading } = useJobsMatches(API_BASE_URL, USER_ID);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isJobAccepted, setIsJobAccepted] = useState(false);
+  const { currentIndex, setCurrentIndex, isJobAccepted, setIsJobAccepted } =
+    useJobs();
   const { rejectJob } = useRejectJob();
   const { acceptJob } = useAcceptJob();
 
@@ -39,7 +39,7 @@ const Jobs = () => {
       if (res && res.success) {
         onSuccess();
       } else if (res && res.success === false) {
-        setCurrentIndex((prev) => prev + 1);
+        setCurrentIndex((prev: number) => prev + 1);
         const message =
           res.message || "Error. Something went wrong, Try again.";
         if (Platform.OS === "web") {
@@ -65,8 +65,13 @@ const Jobs = () => {
 
   const handleRejectJob = () =>
     handleJobAction(rejectJob, () => {
-      Alert.alert("Rejected!");
-      setCurrentIndex((prev) => prev + 1);
+      if (Platform.OS === "web") {
+        window.alert("Rejected!");
+      } else {
+        Alert.alert("Rejected!");
+      }
+
+      setCurrentIndex((prev: number) => prev + 1);
     });
 
   const handleAcceptJob = () =>
@@ -78,7 +83,7 @@ const Jobs = () => {
   if (currentIndex >= jobs.length) {
     return (
       <Text style={styles.text}>
-        No more jobs at the moment (reload an app)
+        No more jobs at the moment (reload the app)
       </Text>
     );
   }

@@ -27,6 +27,7 @@ export interface Job {
     };
     reportTo: {
       name: string;
+      phone?: string;
     };
   };
   wagePerHourInCents: number;
@@ -37,5 +38,5 @@ export interface Job {
   }[];
   branch: string;
   branchPhoneNumber: string;
-  requirements: string[];
+  requirements?: string[];
 }

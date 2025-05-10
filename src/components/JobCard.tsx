@@ -9,7 +9,8 @@ import {
 import { useState } from "react";
 import { Image } from "expo-image";
 import { Job } from "../types/user";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { formatShift } from "../utils/formatShift";
 
 interface JobCardProps {
   job: Job;
@@ -26,7 +27,6 @@ const JobCard = ({
 }: JobCardProps) => {
   const [showAllShifts, setShowAllShifts] = useState(false);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
 
   let cardWidth;
   if (screenWidth <= 500) {
@@ -42,14 +42,15 @@ const JobCard = ({
 
   const CONTENT_MAX_HEIGHT = screenHeight * 0.9 - IMAGE_HEIGHT - BUTTONS_HEIGHT;
 
-  const formatShift = (shift: { startDate: string; endDate: string }) => {
-    const start = new Date(shift.startDate);
-    const end = new Date(shift.endDate);
-    return `${start.toLocaleString("en-US", { month: "short", day: "numeric", weekday: "short" })} ${start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - ${end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} PDT`;
-  };
-
   const shiftsToShow = showAllShifts ? job.shifts : job.shifts.slice(0, 2);
   const hasMoreShifts = Array.isArray(job.shifts) && job.shifts.length > 2;
+
+  const handleCardPress = () => {
+    router.push({
+      pathname: "/jobInfo",
+      params: { jobId: job.jobId, isJobAccepted: String(isJobAccepted) },
+    });
+  };
 
   return (
     <View
@@ -58,8 +59,8 @@ const JobCard = ({
         {
           width: cardWidth,
           borderRadius: 12,
-          maxHeight: screenHeight * 0.85,
           alignSelf: "center",
+          maxHeight: screenHeight * 0.8,
         },
       ]}
     >
@@ -70,11 +71,13 @@ const JobCard = ({
           overflow: "hidden",
         }}
       >
-        <Image
-          style={styles.image}
-          source={job.jobTitle.imageUrl}
-          contentFit="cover"
-        />
+        <TouchableOpacity onPress={handleCardPress} activeOpacity={0.9}>
+          <Image
+            style={styles.image}
+            source={job.jobTitle.imageUrl}
+            contentFit="cover"
+          />
+        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -82,91 +85,98 @@ const JobCard = ({
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={true}
       >
-        <View style={styles.content}>
-          <Text style={styles.title}>{job.jobTitle.name}</Text>
-          <Text style={styles.company}>{job.company.name}</Text>
+        <TouchableOpacity onPress={handleCardPress} activeOpacity={0.9}>
+          <View style={styles.content}>
+            <Text style={styles.title}>{job.jobTitle.name}</Text>
+            <Text style={styles.company}>{job.company.name}</Text>
 
-          <View style={styles.rowGreen}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.label}>Distance</Text>
-              <Text style={styles.distance}>
-                {job.milesToTravel.toFixed(1)} miles
-              </Text>
+            <View style={styles.rowGreen}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.label}>Distance</Text>
+                <Text style={styles.distance}>
+                  {job.milesToTravel.toFixed(1)} miles
+                </Text>
+              </View>
+              <View style={{ flex: 1, alignItems: "flex-end" }}>
+                <Text style={styles.label}>Hourly Rate</Text>
+                <Text style={styles.rate}>
+                  ${(job.wagePerHourInCents / 100).toFixed(2)}
+                </Text>
+              </View>
             </View>
-            <View style={{ flex: 1, alignItems: "flex-end" }}>
-              <Text style={styles.label}>Hourly Rate</Text>
-              <Text style={styles.rate}>
-                ${(job.wagePerHourInCents / 100).toFixed(2)}
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🗓 Shift Dates</Text>
-            <View style={{ maxHeight: 90, marginTop: 6 }}>
-              <ScrollView showsVerticalScrollIndicator={true}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>🗓 Shift Dates</Text>
+              <View style={{ marginTop: 6 }}>
                 {shiftsToShow.map((shift, idx) => (
-                  <Text style={styles.sectionText} key={idx}>
+                  <Text
+                    style={[styles.sectionText, { marginBottom: 8 }]}
+                    key={idx}
+                  >
                     {formatShift(shift)}
                   </Text>
                 ))}
-              </ScrollView>
+              </View>
+              {hasMoreShifts && !showAllShifts && (
+                <TouchableOpacity
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    setShowAllShifts(true);
+                  }}
+                  style={styles.showMoreButton}
+                >
+                  <Text style={styles.showMoreText}>Show more shifts</Text>
+                </TouchableOpacity>
+              )}
+              {hasMoreShifts && showAllShifts && (
+                <TouchableOpacity
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    setShowAllShifts(false);
+                  }}
+                  style={styles.showMoreButton}
+                >
+                  <Text style={styles.showMoreText}>Hide shifts</Text>
+                </TouchableOpacity>
+              )}
             </View>
-            {hasMoreShifts && !showAllShifts && (
-              <TouchableOpacity
-                onPress={() => setShowAllShifts(true)}
-                style={{ marginTop: 6 }}
-              >
-                <Text style={{ color: "#007AFF", fontWeight: "bold" }}>
-                  Show more
-                </Text>
-              </TouchableOpacity>
-            )}
-            {hasMoreShifts && showAllShifts && (
-              <TouchableOpacity
-                onPress={() => setShowAllShifts(false)}
-                style={{ marginTop: 6 }}
-              >
-                <Text style={{ color: "#007AFF", fontWeight: "bold" }}>
-                  Hide
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>📍 Location</Text>
-            <Text style={styles.sectionText}>
-              {job.company.address.formattedAddress}
-            </Text>
-            <Text style={styles.sectionSubText}>
-              {job.milesToTravel.toFixed(2)} miles from your job search location
-            </Text>
-          </View>
-
-          {Array.isArray(job?.requirements) && job.requirements.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>🛠 Requirements</Text>
-              {job.requirements.map((req, idx) => (
-                <Text style={styles.sectionText} key={idx}>
-                  - {req}
-                </Text>
-              ))}
+              <Text style={styles.sectionTitle}>📍 Location</Text>
+              <Text style={styles.sectionText}>
+                {job.company.address.formattedAddress}
+              </Text>
+              <Text style={styles.sectionSubText}>
+                {job.milesToTravel.toFixed(2)} miles from your job search
+                location
+              </Text>
             </View>
-          )}
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>👤 Report To</Text>
-            <Text style={styles.sectionText}>
-              {job.company.reportTo.name} ({job.branchPhoneNumber})
-            </Text>
+            {Array.isArray(job?.requirements) &&
+              job.requirements.length > 0 && (
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>🛠 Requirements</Text>
+                  {job.requirements.map((req, idx) => (
+                    <Text style={styles.sectionText} key={idx}>
+                      - {req}
+                    </Text>
+                  ))}
+                </View>
+              )}
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>👤 Report To</Text>
+              <Text style={styles.sectionText}>
+                {job.company.reportTo.name} ({job.branchPhoneNumber})
+              </Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </ScrollView>
 
       {isJobAccepted ? (
         <View style={[styles.buttonRow, styles.currentJobContainer]}>
-          <Text style={styles.currentJobText}>It is your current Job</Text>
+          <Text style={styles.currentJobText}>It is your current job</Text>
         </View>
       ) : (
         <View
@@ -175,14 +185,25 @@ const JobCard = ({
             {
               borderBottomLeftRadius: 12,
               borderBottomRightRadius: 12,
-              paddingBottom: Math.max(insets.bottom, 16),
             },
           ]}
         >
-          <TouchableOpacity style={styles.noBtn} onPress={onRejectJob}>
+          <TouchableOpacity
+            style={styles.noBtn}
+            onPress={(e) => {
+              e.stopPropagation();
+              onRejectJob();
+            }}
+          >
             <Text style={styles.noBtnText}>No Thanks</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.yesBtn} onPress={onAcceptJob}>
+          <TouchableOpacity
+            style={styles.yesBtn}
+            onPress={(e) => {
+              e.stopPropagation();
+              onAcceptJob();
+            }}
+          >
             <Text style={styles.yesBtnText}>I will Take it</Text>
           </TouchableOpacity>
         </View>
@@ -312,5 +333,22 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  showMoreButton: {
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginTop: 8,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    width: "80%",
+    alignSelf: "center",
+  },
+  showMoreText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

@@ -30,7 +30,7 @@ export function Header() {
     if (pathname === "/") {
       return;
     } else {
-      router.back();
+      router.replace("/");
     }
   };
 

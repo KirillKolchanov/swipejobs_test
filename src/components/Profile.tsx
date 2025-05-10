@@ -1,10 +1,26 @@
 import { API_BASE_URL, USER_ID } from "@/src/constants";
 import { useUser } from "@/src/hooks/useUser";
 import { router } from "expo-router";
-import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
 
 export function Profile() {
   const { user, loading, error } = useUser(API_BASE_URL, USER_ID);
+  const { width: screenWidth } = useWindowDimensions();
+  let contentWidth;
+  if (screenWidth <= 500) {
+    contentWidth = screenWidth * 0.9;
+  } else if (screenWidth <= 700) {
+    contentWidth = 440;
+  } else {
+    contentWidth = 600;
+  }
 
   if (loading) {
     return (
@@ -24,7 +40,13 @@ export function Profile() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={[
+          styles.content,
+          { width: contentWidth, maxWidth: contentWidth, alignSelf: "center" },
+        ]}
+      >
+        <Text style={styles.screenTitle}>User information</Text>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal information</Text>
           <Text style={styles.text}>Name: {user.firstName}</Text>
@@ -55,7 +77,6 @@ export function Profile() {
 
 const styles = StyleSheet.create({
   container: {
-    width: 400,
     flex: 1,
     margin: "auto",
   },
@@ -104,5 +125,13 @@ const styles = StyleSheet.create({
     color: "#007AFF",
     fontSize: 20,
     fontWeight: "500",
+  },
+  screenTitle: {
+    fontSize: 30,
+    fontWeight: "500",
+    marginBottom: 18,
+    marginTop: 4,
+    color: "#3b3b3b",
+    textAlign: "center",
   },
 });
