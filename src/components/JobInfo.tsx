@@ -322,7 +322,9 @@ export default function JobInfo() {
           ) : (
             <>
               <Pressable style={styles.rejectBtn} onPress={handleRejectJob}>
-                <Text style={styles.rejectBtnText}>Reject Job</Text>
+                <Text style={styles.rejectBtnText}>
+                  {isRejectLoading ? "Loading..." : "Reject Job"}
+                </Text>
               </Pressable>
               <Pressable style={styles.acceptBtn} onPress={handleAcceptJob}>
                 <Text style={styles.acceptBtnText}>

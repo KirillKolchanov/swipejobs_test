@@ -41,16 +41,13 @@ export function Header() {
         { paddingTop: insets.top, height: 60 + insets.top },
       ]}
     >
-      <View
-        style={[styles.content, { width: contentWidth, alignSelf: "center" }]}
-      >
+      <View style={[styles.content, { width: contentWidth, minWidth: 375 }]}>
         <Pressable onPress={handleLogoPress}>
           <Text>
             <Text style={styles.logoSwipe}>swipe</Text>
             <Text style={styles.logoJobs}>jobs</Text>
           </Text>
         </Pressable>
-
         {loading ? (
           <Text style={styles.userName}>Loading...</Text>
         ) : error ? (

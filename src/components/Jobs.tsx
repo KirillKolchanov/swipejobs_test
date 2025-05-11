@@ -17,8 +17,8 @@ const Jobs = () => {
   const { jobs, error, loading } = useJobsMatches(API_BASE_URL, USER_ID);
   const { currentIndex, setCurrentIndex, isJobAccepted, setIsJobAccepted } =
     useJobs();
-  const { rejectJob } = useRejectJob();
-  const { acceptJob } = useAcceptJob();
+  const { rejectJob, isRejectLoading } = useRejectJob();
+  const { acceptJob, isAcceptLoading } = useAcceptJob();
 
   if (loading) {
     return <Text style={styles.text}>Loading...</Text>;
@@ -95,6 +95,8 @@ const Jobs = () => {
         isJobAccepted={isJobAccepted}
         onAcceptJob={handleAcceptJob}
         onRejectJob={handleRejectJob}
+        isRejectLoading={isRejectLoading}
+        isAcceptLoading={isAcceptLoading}
       />
     </View>
   );

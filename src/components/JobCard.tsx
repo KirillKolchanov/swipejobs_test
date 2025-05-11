@@ -17,6 +17,8 @@ interface JobCardProps {
   isJobAccepted: boolean;
   onAcceptJob: () => void;
   onRejectJob: () => void;
+  isRejectLoading: boolean;
+  isAcceptLoading: boolean;
 }
 
 const JobCard = ({
@@ -24,6 +26,8 @@ const JobCard = ({
   isJobAccepted,
   onAcceptJob,
   onRejectJob,
+  isRejectLoading,
+  isAcceptLoading,
 }: JobCardProps) => {
   const [showAllShifts, setShowAllShifts] = useState(false);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
@@ -195,7 +199,9 @@ const JobCard = ({
               onRejectJob();
             }}
           >
-            <Text style={styles.noBtnText}>No Thanks</Text>
+            <Text style={styles.noBtnText}>
+              {isRejectLoading ? "Loading..." : "No Thanks"}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.yesBtn}
@@ -204,7 +210,9 @@ const JobCard = ({
               onAcceptJob();
             }}
           >
-            <Text style={styles.yesBtnText}>I will Take it</Text>
+            <Text style={styles.yesBtnText}>
+              {isAcceptLoading ? "Loading..." : "I will Take it"}
+            </Text>
           </TouchableOpacity>
         </View>
       )}
