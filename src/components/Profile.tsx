@@ -1,5 +1,6 @@
-import { API_BASE_URL, USER_ID } from "@/src/constants";
-import { useUser } from "@/src/hooks/useUser";
+import React from "react";
+import { API_BASE_URL, USER_ID } from "../constants/index";
+import { useUser } from "../hooks/useUser";
 import { router } from "expo-router";
 import {
   View,

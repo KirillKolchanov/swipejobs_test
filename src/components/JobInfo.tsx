@@ -114,18 +114,24 @@ export default function JobInfo() {
       <Pressable style={styles.goBack} onPress={() => router.back()}>
         <Text style={styles.goBackText}>← Go back</Text>
       </Pressable>
+      <Text style={styles.screenTitle}>All job information</Text>
       <View style={styles.root}>
         {Platform.OS === "web" ? (
-          <div style={{ maxHeight: "calc(100vh - 100px)", overflowY: "auto" }}>
+          <div
+            style={{
+              maxHeight: "calc(100vh - 100px)",
+              overflowY: "auto",
+              marginTop: 20,
+            }}
+          >
             <ScrollView
               contentContainerStyle={[
                 styles.scrollContent,
                 { width: contentWidth, maxWidth: contentWidth },
-                { paddingBottom: 120 },
+                { paddingBottom: 200 },
               ]}
               showsVerticalScrollIndicator={true}
             >
-              <Text style={styles.screenTitle}>All job information</Text>
               <Image
                 style={[styles.image, { width: "100%", maxWidth: "100%" }]}
                 source={job.jobTitle.imageUrl}
@@ -214,7 +220,6 @@ export default function JobInfo() {
             ]}
             showsVerticalScrollIndicator={true}
           >
-            <Text style={styles.screenTitle}>All job information</Text>
             <Image
               style={[styles.image, { width: "100%", maxWidth: "100%" }]}
               source={job.jobTitle.imageUrl}
@@ -297,18 +302,16 @@ export default function JobInfo() {
         <View
           style={[
             styles.bottomButtonsContainer,
-            Platform.OS === "web"
-              ? {
-                  position: "fixed",
-                  margin: "auto",
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 100,
-                  paddingBottom: 16,
-                  width: contentWidth,
-                }
-              : {},
+            Platform.OS === "web" && {
+              position: "fixed",
+              margin: "auto",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 100,
+              paddingBottom: 16,
+              width: contentWidth,
+            },
           ]}
         >
           {isJobAccepted ? (
@@ -340,7 +343,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    marginTop: 60,
+    marginTop: 20,
     paddingBottom: 16,
   },
   goBack: {
@@ -403,8 +406,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 30,
     fontWeight: "500",
-    marginBottom: 12,
-    marginTop: 4,
+    marginTop: 50,
     color: "#3b3b3b",
     textAlign: "center",
   },

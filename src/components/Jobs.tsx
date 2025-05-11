@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Text, StyleSheet, Alert, Platform } from "react-native";
 import { API_BASE_URL, USER_ID } from "../constants";
 import { useJobsMatches } from "../hooks/useJobsMatches";
