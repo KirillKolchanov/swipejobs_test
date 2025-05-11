@@ -42,17 +42,19 @@ export default function JobInfo() {
   }
 
   if (loading) {
-    return <Text style={styles.screenTitle}>Loading...</Text>;
+    return <Text style={styles.loadingErorText}>Loading...</Text>;
   }
   if (error || !jobs) {
     return (
-      <Text style={styles.screenTitle}>Error: {error || "No jobs found"}</Text>
+      <Text style={styles.loadingErorText}>
+        Error: {error || "No jobs found"}
+      </Text>
     );
   }
 
   const job = jobs.find((j) => j.jobId === jobId);
   if (!job) {
-    return <Text style={styles.screenTitle}>Job not found</Text>;
+    return <Text style={styles.loadingErorText}>Job not found</Text>;
   }
 
   const handleJobAction = async (
@@ -410,6 +412,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginTop: 4,
     color: "#3b3b3b",
+    textAlign: "center",
+  },
+  loadingErorText: {
+    fontSize: 30,
+    marginTop: 60,
     textAlign: "center",
   },
   bottomButtonsContainer: {
