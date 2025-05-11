@@ -13,6 +13,6 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "config/api.ts"
-  ],
+, "jest.config.js"  ],
   "exclude": ["node_modules"]
 }
