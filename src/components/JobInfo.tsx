@@ -32,14 +32,8 @@ export default function JobInfo() {
   const { rejectJob, isRejectLoading } = useRejectJob();
 
   const { width: screenWidth } = useWindowDimensions();
-  let contentWidth;
-  if (screenWidth <= 500) {
-    contentWidth = screenWidth * 0.9;
-  } else if (screenWidth <= 700) {
-    contentWidth = 440;
-  } else {
-    contentWidth = 600;
-  }
+  const contentWidth =
+    screenWidth <= 500 ? screenWidth * 0.9 : screenWidth <= 700 ? 440 : 600;
 
   if (loading) {
     return <Text style={styles.loadingErorText}>Loading...</Text>;
