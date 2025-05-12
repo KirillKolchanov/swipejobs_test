@@ -1,6 +1,7 @@
 module.exports = {
   preset: "jest-expo",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
+  maxWorkers: 1,
   transform: {
     "^.+\\.[jt]sx?$": "babel-jest",
   },
@@ -25,8 +26,7 @@ module.exports = {
   setupFiles: ["<rootDir>/jest.setup.js"],
   setupFilesAfterEnv: ["@testing-library/jest-native/extend-expect"],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^@src/(.*)$": "<rootDir>/src/$1",
+    "^@/(.*)$": "<rootDir>/$1",
   },
   moduleDirectories: ["node_modules", "src"],
 };
