@@ -377,9 +377,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#218c3a",
     letterSpacing: 0.5,
-    textShadowColor: "rgba(215, 51, 51, 0.08)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
+    ...Platform.select({
+      ios: {
+        textShadowColor: "rgba(215, 51, 51, 0.08)",
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+      },
+      android: {
+        elevation: 8,
+      },
+      web: {
+        textShadow: "0px 2px 4px rgba(215, 51, 51, 0.08)",
+      },
+    }),
   },
   section: {
     width: "100%",
@@ -434,10 +444,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: "center",
-    shadowColor: "#e74c3c",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#e74c3c",
+        shadowOpacity: 0.08,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+      web: {
+        boxShadow: "0px 2px 4px rgba(231, 76, 60, 0.08)",
+      },
+    }),
   },
   rejectBtnText: {
     color: "#e74c3c",
@@ -453,10 +473,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: "center",
-    shadowColor: "#218c3a",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#218c3a",
+        shadowOpacity: 0.08,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+      web: {
+        boxShadow: "0px 2px 4px rgba(33, 140, 58, 0.08)",
+      },
+    }),
   },
   acceptBtnText: {
     color: "#fff",
@@ -471,11 +501,20 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 10,
     paddingHorizontal: 24,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOpacity: 0.08,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+      web: {
+        boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.08)",
+      },
+    }),
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
