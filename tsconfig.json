@@ -1,11 +1,18 @@
 {
-  "extends": ["expo/tsconfig.base", "expo-module-scripts/tsconfig.base"],
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "config/api.ts"
+, "jest.config.js"  ],
   "exclude": ["node_modules"]
 }
