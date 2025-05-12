@@ -7,13 +7,11 @@ import * as useRejectJobHook from "../../hooks/useRejectJob";
 import * as JobsContext from "../../context/JobsContext";
 import { Job } from "../../types/user";
 
-// Мокаем константы
 jest.mock("../../constants", () => ({
   API_BASE_URL: "https://test-api.com",
   USER_ID: "test-user-123",
 }));
 
-// Мокаем expo-router
 jest.mock("expo-router", () => ({
   router: {
     back: jest.fn(),
@@ -21,18 +19,15 @@ jest.mock("expo-router", () => ({
   },
 }));
 
-// Мокаем expo-router/build/hooks
 jest.mock("expo-router/build/hooks", () => ({
   useSearchParams: () => ({ get: () => "job123" }),
 }));
 
-// Мокаем expo-image
 jest.mock("expo-image", () => ({
   Image: "Image",
 }));
 
 describe("JobInfo", () => {
-  // Тестовые данные
   const mockJob: Job = {
     jobId: "job123",
     jobTitle: {
@@ -87,14 +82,8 @@ describe("JobInfo", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    // Мокируем useJobs
     jest.spyOn(JobsContext, "useJobs").mockReturnValue(mockJobsContext);
-
-    // Мокируем useAcceptJob
     jest.spyOn(useAcceptJobHook, "useAcceptJob").mockReturnValue(mockAcceptJob);
-
-    // Мокируем useRejectJob
     jest.spyOn(useRejectJobHook, "useRejectJob").mockReturnValue(mockRejectJob);
   });
 
