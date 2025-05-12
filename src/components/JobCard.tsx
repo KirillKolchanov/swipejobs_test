@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  Platform,
 } from "react-native";
 import { useState } from "react";
 import { Image } from "expo-image";
@@ -226,11 +227,20 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 16,
-    elevation: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOpacity: 0.18,
+        shadowOffset: { width: 0, height: 6 },
+        shadowRadius: 16,
+      },
+      android: {
+        elevation: 8,
+      },
+      web: {
+        boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.18)",
+      },
+    }),
   },
   image: {
     width: "100%",
@@ -266,17 +276,37 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
-    textShadowColor: "#222",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    ...Platform.select({
+      ios: {
+        textShadowColor: "#222",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
+      },
+      android: {
+        // На Android эффект тени текста не работает так хорошо
+      },
+      web: {
+        textShadow: "1px 1px 2px #222",
+      },
+    }),
   },
   rate: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
-    textShadowColor: "#222",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    ...Platform.select({
+      ios: {
+        textShadowColor: "#222",
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
+      },
+      android: {
+        // На Android эффект тени текста не работает так хорошо
+      },
+      web: {
+        textShadow: "1px 1px 2px #222",
+      },
+    }),
   },
   section: {
     marginBottom: 12,
